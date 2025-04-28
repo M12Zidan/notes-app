@@ -85,37 +85,3 @@ export async function PUT(request) {
     return Response.json({ code: 500, message: 'Anda Gagal Update Notes' }, { status: 500 });
   }
 }
-
-export async function DELETE(request) {
-  try {
-    const body = await request.json();
-
-    if (!body.id_notes || !body.id_user) {
-      return Response.json({ code: 400, message: 'id_notes and id_user are required' }, { status: 400 });
-    }
-
-    // Cari data yang sesuai id_notes dan id_user
-    const existingNote = await prisma.notes.findFirst({
-      where: {
-        id_notes: body.id_notes,
-        id_user: body.id_user,
-      },
-    });
-
-    if (!existingNote) {
-      return Response.json({ code: 404, message: 'Notes not found' }, { status: 404 });
-    }
-
-    // Hapus notes
-    await prisma.notes.delete({
-      where: {
-        id_notes: body.id_notes,
-      },
-    });
-
-    return Response.json({ code: 200, message: 'Notes deleted successfully' }, { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return Response.json({ code: 500, message: 'Failed to delete notes' }, { status: 500 });
-  }
-}
