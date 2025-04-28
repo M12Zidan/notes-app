@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["multiSchema", "postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas    = ["auth", "form", "notes"]
+  extensions = [uuidOssp(map: "uuid-ossp")]
+}
+
+model notes {
+  id_notes String @id @unique(map: "unique_responsen_cuid") @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_user String
+  title String
+  content String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  @@schema("notes")
+}
