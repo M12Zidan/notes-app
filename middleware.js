@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
  
-const allowedOrigins = ['*']
+const allowedOrigins = ['http://localhost:3000/', 'https://notes-app-rosy-phi.vercel.app/']
  
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
