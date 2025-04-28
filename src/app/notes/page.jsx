@@ -9,7 +9,8 @@ const NotesPage = () => {
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/notes");
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`);
+        console.log(process.env.API_URL)
         const data = await response.json();
         if (data.code === 200) {
           setNotes(data.data.notes);
