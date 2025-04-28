@@ -1,42 +1,34 @@
 import { NextResponse } from 'next/server'
- 
-const allowedOrigins = ['http://localhost:3000/', 'https://notes-app-rosy-phi.vercel.app/']
- 
+
 const corsOptions = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 }
- 
+
 export function middleware(request) {
-  // Check the origin from the request
-  const origin = request.headers.get('origin') ?? ''
-  const isAllowedOrigin = allowedOrigins.includes(origin)
- 
-  // Handle preflighted requests
+  // Handle preflighted requests (OPTIONS)
   const isPreflight = request.method === 'OPTIONS'
- 
+
   if (isPreflight) {
     const preflightHeaders = {
-      ...(isAllowedOrigin && { 'Access-Control-Allow-Origin': origin }),
+      'Access-Control-Allow-Origin': '*',  // Allow any origin
       ...corsOptions,
     }
     return NextResponse.json({}, { headers: preflightHeaders })
   }
- 
-  // Handle simple requests
+
+  // Handle simple requests (GET, POST, PUT, DELETE)
   const response = NextResponse.next()
- 
-  if (isAllowedOrigin) {
-    response.headers.set('Access-Control-Allow-Origin', origin)
-  }
- 
+
+  // Set CORS headers
+  response.headers.set('Access-Control-Allow-Origin', '*')  // Allow any origin
   Object.entries(corsOptions).forEach(([key, value]) => {
     response.headers.set(key, value)
   })
- 
+
   return response
 }
- 
+
 export const config = {
-  matcher: '/api/:path*',
+  matcher: '/api/:path*', // Make sure to apply this to your API routes
 }
