@@ -1,6 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import CardNotes from "@/components/my-components/CardNotes";
+import { Loader } from "lucide-react";
 
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
@@ -27,10 +28,13 @@ const NotesPage = () => {
 
   return (
     <div className="container max-w-screen-lg mx-auto p-4">
-      <h1 className="text-3xl font-semibold text-center text-blue-500 mb-6">All Notes</h1>
+      <h1 className="mt-6 text-4xl font-bold text-center text-blue-500 mb-10">All Notes</h1>
       
       {loading ? (
-        <div className="text-center text-xl text-gray-500">Loading...</div>
+        <div className="mt-20 flex flex-col justify-center items-center gap-4 text-center text-2xl text-gray-500">
+        <Loader size={24} className="animate-spin text-blue-700" />
+        <p>Mengambil catatan...</p>{" "}
+      </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
           {notes.map((note) => (

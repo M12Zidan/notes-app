@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Loader } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 export default function EditNotePage({ params }) {
   const { id } = params;
@@ -86,13 +88,13 @@ export default function EditNotePage({ params }) {
     );
 
   return (
-    <div className="max-w-xl mx-auto p-6 space-y-4">
-      <h1 className="text-2xl font-bold">Edit Catatan</h1>
+    <Card className="max-w-xl mx-auto p-6 space-y-4">
+      <h1 className="text-3xl text-center font-bold">Edit Catatan</h1>
 
-      <div>
-        <label htmlFor="title" className="block font-medium mb-1">
+      <div className="mt-10">
+        <Label htmlFor="title" className="ml-2 block text-lg font-medium mb-1">
           Judul
-        </label>
+        </Label>
         <Input
           id="title"
           value={title}
@@ -101,9 +103,9 @@ export default function EditNotePage({ params }) {
       </div>
 
       <div>
-        <label htmlFor="content" className="block font-medium mb-1">
+        <Label htmlFor="content" className="ml-2 block text-lg font-medium mb-1">
           Isi
-        </label>
+        </Label>
         <Textarea
           id="content"
           value={content}
@@ -120,6 +122,6 @@ export default function EditNotePage({ params }) {
           {loading ? "Menyimpan..." : "Simpan Perubahan"}
         </Button>
       </div>
-    </div>
+    </Card>
   );
 }
