@@ -36,7 +36,7 @@ const CardNotes = ({ note }) => {
               </Link>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Edit Notes</p>
+              <p>View & Edit Notes</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
