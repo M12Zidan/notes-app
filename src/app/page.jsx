@@ -9,7 +9,7 @@ export default function Home() {
           A simple and powerful note-taking app for your everyday thoughts.
         </p>
         <a
-          href="/create"
+          href="/notes/create"
           className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-500 transition duration-300"
         >
           Create a New Note
