@@ -36,7 +36,7 @@ export default function Navbar() {
             {/* Navigasi Desktop */}
             <Link href="/" className="text-white hover:text-gray-300">Home</Link>
             <Link href="/notes" className="text-white hover:text-gray-300">List Notes</Link>
-            <Link href="/create" className="text-white hover:text-gray-300">Create Notes</Link>
+            <Link href="/notes/create" className="text-white hover:text-gray-300">Create Notes</Link>
           </div>
         </div>
       </nav>

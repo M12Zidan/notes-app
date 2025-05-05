@@ -1,0 +1,125 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { Loader } from "lucide-react";
+
+export default function EditNotePage({ params }) {
+  const { id } = params;
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const [note, setNote] = useState(null);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`
+        );
+        if (!res.ok) throw new Error("Catatan tidak ditemukan");
+
+        const { data } = await res.json();
+        setNote(data);
+        setTitle(data.title);
+        setContent(data.content);
+      } catch (error) {
+        toast({
+          title: "Gagal mengambil catatan",
+          description: "Pastikan catatan tersedia.",
+        });
+      }
+    };
+
+    fetchNote();
+  }, [id, toast]);
+
+  const handleUpdate = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id_notes: id,
+          id_user: note.id_user,
+          title,
+          content,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Gagal memperbarui catatan");
+
+      toast({
+        className: cn("bg-green-500", "text-white"),
+        title: "Catatan diperbarui",
+        description: "Perubahan telah disimpan.",
+      });
+
+      router.push("/notes");
+    } catch (error) {
+      toast({
+        title: "Gagal menyimpan",
+        description: "Terjadi kesalahan saat memperbarui catatan.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!note)
+    return (
+      <div className="mt-20 flex flex-col justify-center items-center gap-4 text-center text-2xl text-gray-500">
+        <Loader size={24} className="animate-spin text-blue-700" />
+        <p>Memuat catatan...</p>{" "}
+      </div>
+    );
+
+  return (
+    <div className="max-w-xl mx-auto p-6 space-y-4">
+      <h1 className="text-2xl font-bold">Edit Catatan</h1>
+
+      <div>
+        <label htmlFor="title" className="block font-medium mb-1">
+          Judul
+        </label>
+        <Input
+          id="title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label htmlFor="content" className="block font-medium mb-1">
+          Isi
+        </label>
+        <Textarea
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          rows={6}
+        />
+      </div>
+
+      <div className="flex justify-end gap-2">
+        <Button variant="secondary" onClick={() => router.back()}>
+          Batal
+        </Button>
+        <Button onClick={handleUpdate} disabled={loading}>
+          {loading ? "Menyimpan..." : "Simpan Perubahan"}
+        </Button>
+      </div>
+    </div>
+  );
+}
