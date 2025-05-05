@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div className="flex flex-col justify-center items-center">
@@ -8,12 +10,12 @@ export default function Home() {
         <p className="text-xl text-gray-700 mb-8">
           A simple and powerful note-taking app for your everyday thoughts.
         </p>
-        <a
+        <Link
           href="/notes/create"
           className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-500 transition duration-300"
         >
           Create a New Note
-        </a>
+        </Link>
       </div>
       <div className="mt-16">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Features</h2>
