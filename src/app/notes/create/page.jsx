@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +17,14 @@ export default function CreateNotePage() {
 
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      router.push("/");
+    }
+  }, [router]);
 
   const handleCreate = async () => {
     if (!title.trim() || !content.trim()) {

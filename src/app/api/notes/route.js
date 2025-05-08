@@ -40,10 +40,15 @@ export async function POST(request) {
 
     const note = await prisma.notes.create({
       data: {
-        id_user: body.id_user,
-        title: body.title,
-        content: body.content,
-      },
+        id_user : validate.data.id_user,
+        title: validate.data.title,
+        content: validate.data.content
+      }
+      // data: {
+      //   id_user: body.id_user,
+      //   title: body.title,
+      //   content: body.content,
+      // },
     });
 
     if (!note) {

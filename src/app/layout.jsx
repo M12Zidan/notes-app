@@ -1,6 +1,7 @@
+import { cookies } from "next/headers";
 import Navbar from "@/components/my-components/Navbar";
 import Footer from "@/components/my-components/Footer";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 export const metadata = {
@@ -12,10 +13,12 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+
   return (
     <html lang="en">
       <body className={`antialiased flex flex-col min-h-screen`}>
-        <Navbar />
+        {/* Pass isLoggedIn to Navbar */}
+        <Navbar/>
         <section className="p-4 bg-slate-200 flex-grow">{children}</section>
         <Footer />
         <Toaster />

@@ -6,14 +6,12 @@ import { Loader } from "lucide-react";
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(null);
 
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/notes`
-        );
-        console.log(process.env.API_URL);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`);
         const data = await response.json();
         if (data.code === 200) {
           setNotes(data.data.notes);
@@ -24,6 +22,17 @@ const NotesPage = () => {
         setLoading(false);
       }
     };
+
+    // Ambil token dari localStorage dan dekode untuk mendapatkan userId
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        setUserId(decodedToken.userId); // Ambil userId dari token
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
+    }
 
     fetchNotes();
   }, []);
@@ -46,7 +55,10 @@ const NotesPage = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
           {notes.map((note) => (
-            <CardNotes key={note.id_notes} note={note} />
+            <CardNotes
+              key={note.id_notes}
+              note={note}
+              isOwner={note.id_user === userId} />
           ))}
         </div>
       )}
