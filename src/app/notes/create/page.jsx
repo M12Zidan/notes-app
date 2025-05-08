@@ -9,11 +9,13 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import jwt from "jsonwebtoken";
 
 export default function CreateNotePage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
 
   const router = useRouter();
   const { toast } = useToast();
@@ -22,13 +24,22 @@ export default function CreateNotePage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      router.push("/");
+      router.push("/"); 
+    } else {
+      try {
+        const decodedToken = jwt.decode(token); 
+        setUser(decodedToken.userId);
+      } catch (error) {
+        console.error("Error decoding token", error);
+        router.push("/"); 
+      }
     }
   }, [router]);
 
   const handleCreate = async () => {
     if (!title.trim() || !content.trim()) {
       toast({
+        variant: "destructive",
         title: "Gagal menyimpan",
         description: "Judul dan isi tidak boleh kosong.",
       });
@@ -43,7 +54,7 @@ export default function CreateNotePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id_user: "anonim",
+          id_user: user,
           title,
           content,
         }),
@@ -60,6 +71,7 @@ export default function CreateNotePage() {
       router.push("/notes");
     } catch (error) {
       toast({
+        variant: "destructive",
         title: "Gagal menyimpan",
         description: "Terjadi kesalahan saat menambahkan catatan.",
       });
