@@ -5,23 +5,40 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["multiSchema", "postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
   schemas    = ["auth", "form", "notes"]
   extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
-model notes {
-  id_notes String @id @unique(map: "unique_responsen_cuid") @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
-  id_user String
-  title String
-  content String
+model Notes {
+  id_notes   String   @id @unique(map: "unique_responsen_cuid") @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_user    String?
+  title      String
+  content    String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+
+  user User? @relation(fields: [id_user], references: [id_user])
+
   @@schema("notes")
+}
+
+model User {
+  id_user    String   @id @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  nm_lengkap String
+  email      String   @unique
+  username   String   @unique
+  password   String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now())
+
+  notes Notes[]
+
+  @@schema("auth")
 }
