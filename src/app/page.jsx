@@ -16,7 +16,6 @@ export default function Home() {
           const decodedToken = jwt.decode(token);
           setIsLoggedIn(decodedToken.userId ? true : false);
         } catch (error) {
-          console.error("Error decoding token", error);
           setIsLoggedIn(false);
         }
       }
