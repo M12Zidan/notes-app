@@ -24,14 +24,14 @@ export default function CreateNotePage() {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      router.push("/"); 
+      router.push("/");
     } else {
       try {
-        const decodedToken = jwt.decode(token); 
+        const decodedToken = jwt.decode(token);
         setUser(decodedToken.userId);
       } catch (error) {
         console.error("Error decoding token", error);
-        router.push("/"); 
+        router.push("/");
       }
     }
   }, [router]);
@@ -52,6 +52,7 @@ export default function CreateNotePage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           id_user: user,
@@ -81,40 +82,45 @@ export default function CreateNotePage() {
   };
 
   return (
-    <Card className="max-w-xl mx-auto p-6 space-y-4">
-      <h1 className="text-3xl text-center font-bold">Buat Catatan Baru</h1>
+    <div className="mt-20">
+      <Card className="max-w-xl mx-auto p-6 space-y-4">
+        <h1 className="text-3xl text-center font-bold">Buat Catatan Baru</h1>
 
-      <div>
-        <Label htmlFor="title" className="ml-2 block text-lg font-medium mb-1">
-          Judul
-        </Label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
+        <div>
+          <Label
+            htmlFor="title"
+            className="ml-2 block text-lg font-medium mb-1"
+          >
+            Judul
+          </Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
 
-      <div>
-        <label htmlFor="content" className="block font-medium mb-1">
-          Isi
-        </label>
-        <Textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          rows={6}
-        />
-      </div>
+        <div>
+          <label htmlFor="content" className="block font-medium mb-1">
+            Isi
+          </label>
+          <Textarea
+            id="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+          />
+        </div>
 
-      <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={() => router.back()}>
-          Batal
-        </Button>
-        <Button onClick={handleCreate} disabled={loading}>
-          {loading ? "Menyimpan..." : "Simpan"}
-        </Button>
-      </div>
-    </Card>
+        <div className="flex justify-end gap-2">
+          <Button variant="secondary" onClick={() => router.back()}>
+            Batal
+          </Button>
+          <Button onClick={handleCreate} disabled={loading}>
+            {loading ? "Menyimpan..." : "Simpan"}
+          </Button>
+        </div>
+      </Card>
+    </div>
   );
 }

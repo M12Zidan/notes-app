@@ -23,10 +23,6 @@ export const updateNoteSchema = z.object({
     required_error: "Id Notes is required",
     invalid_type_error: "Id Notes must be a string",
   }).min(1, "Id Notes cannot be empty"),
-  id_user: z.string({
-    required_error: "Id User is required",
-    invalid_type_error: "Id User must be a string"
-  }).min(1, "Id User cannot be empty"),
   
   title: z.string({
     required_error: "Title is required",
@@ -44,10 +40,6 @@ export const deleteNoteSchema = z.object({
   id_notes: z.string({
     required_error: "Id Notes is required",
     invalid_type_error: "Id Notes must be a string",
-  }).min(1, "Id Notes cannot be empty"),
-  id_user: z.string({
-    required_error: "Id User is required",
-    invalid_type_error: "Id User must be a string"
-  }).min(1, "Id User cannot be empty"),
+  }).min(1, "Id Notes cannot be empty")
 });
 

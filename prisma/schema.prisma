@@ -12,7 +12,7 @@ generator client {
 datasource db {
   provider   = "postgresql"
   url        = env("DATABASE_URL")
-  schemas    = ["auth", "form", "notes"]
+  schemas    = ["auth", "tugas-akhir", "notes"]
   extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
@@ -41,4 +41,38 @@ model User {
   notes Notes[]
 
   @@schema("auth")
+  resultProject ResultProject[]
+  ReviewProject ReviewProject[]
+}
+
+model ResultProject {
+  id_project         String           @id @unique @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_user            String
+  name_mhs           String
+  nim_mhs            String           @unique
+  status             String
+  profile_link       String
+  project_link       String
+  image_project_link String
+
+  total_reviews      Int              @default(0)
+  average_score      Float            @default(0.0)
+
+  user               User?            @relation(fields: [id_user], references: [id_user])
+  reviewProject      ReviewProject[]
+
+  @@schema("tugas-akhir")
+}
+
+model ReviewProject {
+  id_review         String        @id @default(dbgenerated("public.uuid_generate_v4()")) @db.VarChar(255)
+  id_project        String
+  reviewer_id     String
+  score             Int          
+  reviewed_at       DateTime     @default(now())
+
+  user User? @relation(fields: [reviewer_id], references: [id_user])
+  project           ResultProject @relation(fields: [id_project], references: [id_project])
+
+  @@schema("tugas-akhir")
 }

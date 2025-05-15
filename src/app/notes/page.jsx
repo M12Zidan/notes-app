@@ -1,7 +1,9 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import CardNotes from "@/components/my-components/CardNotes";
 import { Loader } from "lucide-react";
+import jwt from "jsonwebtoken";
 
 const NotesPage = () => {
   const [notes, setNotes] = useState([]);
@@ -23,14 +25,13 @@ const NotesPage = () => {
       }
     };
 
-    // Ambil token dari localStorage dan dekode untuk mendapatkan userId
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setUserId(decodedToken.userId); // Ambil userId dari token
+        const decoded = jwt.decode(token);
+        setUserId(decoded.userId);
       } catch (error) {
-        console.error("Invalid token:", error);
+        console.error("Token tidak valid:", error);
       }
     }
 
@@ -58,7 +59,8 @@ const NotesPage = () => {
             <CardNotes
               key={note.id_notes}
               note={note}
-              isOwner={note.id_user === userId} />
+              isOwner={note.id_user === userId}
+            />
           ))}
         </div>
       )}

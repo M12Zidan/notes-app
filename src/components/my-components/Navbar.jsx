@@ -10,9 +10,8 @@ export default function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const closeSidebar = () => setIsOpen(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -23,67 +22,39 @@ export default function Navbar() {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     router.push("/login");
+    closeSidebar();
   };
 
   return (
-    <div>
-      <nav className="bg-blue-500 p-4 w-full z-50 shadow-md sticky">
+    <div className="w-full sticky top-0 z-50">
+      <nav className="bg-blue-500 px-4 py-6 shadow-md">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-white font-bold text-xl">NotesApp</div>
-          <div className="flex items-center space-x-4 md:hidden transition-all">
-            {isOpen ? (
-              <button onClick={toggleSidebar}>
-                <X className="text-white" size={24} />
-              </button>
-            ) : (
-              <button onClick={toggleSidebar}>
-                <Menu className="text-white" size={24} />
-              </button>
-            )}
+          <div className="text-white font-bold text-2xl md:text-3xl">Notes App</div>
+          <div className="flex items-center space-x-4 md:hidden">
+            <button onClick={toggleSidebar}>
+              <Menu className="text-white" size={24} />
+            </button>
           </div>
           <div className="hidden md:flex space-x-4 items-center">
-            <Link href="/" className="text-white hover:text-gray-300">
-              Home
-            </Link>
-            <Link href="/notes" className="text-white hover:text-gray-300">
-              List Notes
-            </Link>
+            <Link href="/" className="text-white hover:text-gray-300">Home</Link>
+            <Link href="/about" className="text-white hover:text-gray-300">About Us</Link>
+            <Link href="/notes" className="text-white hover:text-gray-300">List Notes</Link>
             {isLoggedIn && (
-              <Link
-                href="/notes/create"
-                className="text-white hover:text-gray-300"
-              >
-                Create Notes
-              </Link>
+              <Link href="/notes/create" className="text-white hover:text-gray-300">Create Notes</Link>
             )}
             {isLoggedIn ? (
-              <Button
-                size="sm"
-                onClick={handleLogout}
-                className="text-white hover:text-gray-300"
-              >
+              <Button size="sm" onClick={handleLogout} className="text-white hover:text-gray-300">
                 Logout
               </Button>
             ) : (
               <>
-                <Link href="/login" className="text-white hover:text-gray-300">
-                  <Button
-                    size="sm"
-                    type="button"
-                    className="text-white hover:text-gray-300 bg-green-500 hover:bg-green-600"
-                  >
+                <Link href="/login">
+                  <Button size="sm" className="text-white bg-green-500 hover:bg-green-600">
                     Login
                   </Button>
                 </Link>
-                <Link
-                  href="/register"
-                  className="text-white hover:text-gray-300"
-                >
-                  <Button
-                    size="sm"
-                    type="button"
-                    className="text-black bg-white hover:bg-gray-100"
-                  >
+                <Link href="/register">
+                  <Button size="sm" className="text-black bg-white hover:bg-gray-100">
                     Register
                   </Button>
                 </Link>
@@ -93,65 +64,55 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Sidebar Mobile */}
-      <div
-        className={`fixed inset-0 bg-gray-800 bg-opacity-50 md:hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
-      >
+      {/* Overlay & Drawer */}
+      {isOpen && (
         <div
-          className={`w-64 bg-blue-500 p-6 space-y-6 transform transition-transform ${
-            isOpen ? "translate-x-0" : "-translate-x-full"
-          } duration-500 ease-in-out h-full`}
+          className="fixed inset-0 bg-gray-800 bg-opacity-50 md:hidden z-40"
+          onClick={closeSidebar}
         >
-          <div className="text-white font-bold text-xl">NotesApp</div>
-          <div className="space-y-4 mt-6 flex flex-col">
-            <Link
-              href="/"
-              className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md"
-            >
-              Home
-            </Link>
-            <Link
-              href="/notes"
-              className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md"
-            >
-              List Notes
-            </Link>
-            {isLoggedIn && (
-              <Link
-                href="/notes/create"
-                className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md"
-              >
-                Create Notes
-              </Link>
-            )}
-            {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="text-white text-left text-lg hover:bg-white hover:text-black p-2 rounded-md"
-              >
-                Logout
+          <div
+            className="w-64 bg-blue-500 p-6 space-y-6 transform translate-x-0 transition-transform duration-500 ease-in-out h-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <div className="text-white font-bold text-2xl">Notes App</div>
+              <button onClick={closeSidebar}>
+                <X className="text-white" size={24} />
               </button>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md"
-                >
-                  Login
+            </div>
+            <div className="space-y-4 mt-6 flex flex-col">
+              <Link href="/" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                Home
+              </Link>
+              <Link href="/about" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                About Us
+              </Link>
+              <Link href="/notes" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                List Notes
+              </Link>
+              {isLoggedIn && (
+                <Link href="/notes/create" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                  Create Notes
                 </Link>
-                <Link
-                  href="/register"
-                  className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md"
-                >
-                  Register
-                </Link>
-              </>
-            )}
+              )}
+              {isLoggedIn ? (
+                <button onClick={handleLogout} className="text-white text-left text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link href="/login" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                    Login
+                  </Link>
+                  <Link href="/register" onClick={closeSidebar} className="text-white text-lg hover:bg-white hover:text-black p-2 rounded-md">
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

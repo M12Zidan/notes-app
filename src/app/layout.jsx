@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
       <body className={`antialiased flex flex-col min-h-screen`}>
         {/* Pass isLoggedIn to Navbar */}
         <Navbar/>
-        <section className="p-4 bg-slate-200 flex-grow">{children}</section>
+        <section className=" bg-slate-200 flex-grow">{children}</section>
         <Footer />
         <Toaster />
       </body>

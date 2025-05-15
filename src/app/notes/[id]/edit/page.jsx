@@ -20,13 +20,23 @@ export default function EditNotePage({ params }) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState("");
 
   useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (!storedToken) {
+      router.push("/");
+      return;
+    }
+    setToken(storedToken);
+
     const fetchNote = async () => {
       try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`
-        );
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes/${id}`, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`,
+          },
+        });
         if (!res.ok) throw new Error("Catatan tidak ditemukan");
 
         const { data } = await res.json();
@@ -42,15 +52,25 @@ export default function EditNotePage({ params }) {
     };
 
     fetchNote();
-  }, [id, toast]);
+  }, [id, toast, router]);
 
   const handleUpdate = async () => {
+    if (!title.trim() || !content.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Gagal menyimpan",
+        description: "Judul dan isi tidak boleh kosong.",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/notes`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           id_notes: id,
@@ -83,7 +103,7 @@ export default function EditNotePage({ params }) {
     return (
       <div className="mt-20 flex flex-col justify-center items-center gap-4 text-center text-2xl text-gray-500">
         <Loader size={24} className="animate-spin text-blue-700" />
-        <p>Memuat catatan...</p>{" "}
+        <p>Memuat catatan...</p>
       </div>
     );
 

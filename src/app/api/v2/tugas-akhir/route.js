@@ -1,27 +1,32 @@
 import prisma from "@/lib/prisma";
-import {
-  createNoteSchema,
-  deleteNoteSchema,
-  updateNoteSchema,
-} from "@/lib/validation/notes";
 import { verifyToken } from "@/lib/(back-end)/auth";
-
 export const dynamic = "force-dynamic";
 
-export async function GET(request) {
+
+
+import {
+  createProjectSchema,
+  updateProjectSchema,
+  deleteProjectSchema,
+} from "@/lib/validation/resultProject";
+
+export async function GET() {
   try {
-    const notes = await prisma.notes.findMany();
+    const projects = await prisma.resultProject.findMany({
+      include: { reviewProject: true },
+    });
+
     return Response.json(
       {
         code: 200,
-        message: "Anda Berhasil Mengakses API Notes",
-        data: { notes },
+        message: "Berhasil mendapatkan data project",
+        data: { projects },
       },
       { status: 200 }
     );
   } catch {
     return Response.json(
-      { code: 500, message: "Anda Gagal Mengakses API Notes" },
+      { code: 500, message: "Gagal mendapatkan data project" },
       { status: 500 }
     );
   }
@@ -33,7 +38,7 @@ export async function POST(request) {
     const user = verifyToken(authHeader);
 
     const body = await request.json();
-    const validate = createNoteSchema.safeParse(body);
+    const validate = createProjectSchema.safeParse(body);
 
     if (!validate.success) {
       const messages = validate.error.errors.map((error) => ({
@@ -43,16 +48,31 @@ export async function POST(request) {
       return Response.json({ code: 400, errors: messages }, { status: 400 });
     }
 
-    const note = await prisma.notes.create({
+    const existingProject = await prisma.resultProject.findUnique({
+      where: { nim_mhs: validate.data.nim },
+    });
+
+    if (existingProject) {
+      return Response.json(
+        { code: 409, message: "Project dengan NIM ini sudah ada" },
+        { status: 409 }
+      );
+    }
+
+    const project = await prisma.resultProject.create({
       data: {
         id_user: user.userId,
-        title: validate.data.title,
-        content: validate.data.content,
+        name_mhs: validate.data.name,
+        nim_mhs: validate.data.nim,
+        status: validate.data.status,
+        profile_link: validate.data.profileLink,
+        project_link: validate.data.websiteLink,
+        image_project_link: validate.data.imageUrl,
       },
     });
 
     return Response.json(
-      { code: 200, message: "Anda Berhasil Membuat Notes", data: note },
+      { code: 200, message: "Berhasil membuat project", data: project },
       { status: 200 }
     );
   } catch (error) {
@@ -61,13 +81,15 @@ export async function POST(request) {
   }
 }
 
+
+
 export async function PUT(request) {
   try {
     const authHeader = request.headers.get("authorization");
     const user = verifyToken(authHeader);
 
     const body = await request.json();
-    const validate = updateNoteSchema.safeParse(body);
+    const validate = updateProjectSchema.safeParse(body);
 
     if (!validate.success) {
       const messages = validate.error.errors.map((error) => ({
@@ -77,35 +99,38 @@ export async function PUT(request) {
       return Response.json({ code: 400, errors: messages }, { status: 400 });
     }
 
-    const existingNote = await prisma.notes.findUnique({
-      where: { id_notes: validate.data.id_notes },
+    const existing = await prisma.resultProject.findUnique({
+      where: { id_project: validate.data.id_project },
     });
 
-    if(!existingNote ){
+    if (!existing) {
       return Response.json(
-        { code: 404, message: "Notes not found" },
+        { code: 404, message: "Project tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    if (existingNote.id_user !== user.userId) {
+    if (existing.id_user !== user.userId) {
       return Response.json(
         { code: 403, message: "Forbidden: Anda tidak memiliki akses" },
         { status: 403 }
       );
     }
 
-    const updatedNote = await prisma.notes.update({
-      where: { id_notes: validate.data.id_notes },
+    const updated = await prisma.resultProject.update({
+      where: { id_project: validate.data.id_project },
       data: {
-        title: validate.data.title,
-        content: validate.data.content,
-        updated_at: new Date(),
+        name_mhs: validate.data.name,
+        nim_mhs: validate.data.nim,
+        status: validate.data.status,
+        profile_link: validate.data.profileLink,
+        project_link: validate.data.websiteLink,
+        image_project_link: validate.data.imageUrl,
       },
     });
 
     return Response.json(
-      { code: 200, message: "Berhasil Update Notes", data: updatedNote },
+      { code: 200, message: "Berhasil update project", data: updated },
       { status: 200 }
     );
   } catch (error) {
@@ -120,7 +145,7 @@ export async function DELETE(request) {
     const user = verifyToken(authHeader);
 
     const body = await request.json();
-    const validate = deleteNoteSchema.safeParse(body);
+    const validate = deleteProjectSchema.safeParse(body);
 
     if (!validate.success) {
       const messages = validate.error.errors.map((error) => ({
@@ -130,30 +155,30 @@ export async function DELETE(request) {
       return Response.json({ code: 400, errors: messages }, { status: 400 });
     }
 
-    const existingNote = await prisma.notes.findUnique({
-      where: { id_notes: validate.data.id_notes },
+    const existing = await prisma.resultProject.findUnique({
+      where: { id_project: validate.data.id_project },
     });
 
-    if(!existingNote) {
+    if (!existing) {
       return Response.json(
-        { code: 404, message: "Notes not found" },
+        { code: 404, message: "Project tidak ditemukan" },
         { status: 404 }
       );
     }
 
-    if (existingNote.id_user !== user.userId) {
+    if (existing.id_user !== user.userId) {
       return Response.json(
         { code: 403, message: "Forbidden: Anda tidak memiliki akses" },
         { status: 403 }
       );
     }
 
-    await prisma.notes.delete({
-      where: { id_notes: validate.data.id_notes },
+    await prisma.resultProject.delete({
+      where: { id_project: validate.data.id_project },
     });
 
     return Response.json(
-      { code: 200, message: "Berhasil Menghapus Notes" },
+      { code: 200, message: "Berhasil menghapus project" },
       { status: 200 }
     );
   } catch (error) {
