@@ -14,14 +14,14 @@ import Link from "next/link";
 
 const CardNotes = ({ note, isOwner }) => {
   return (
-    <div className="bg-card text-card-foreground shadow-md rounded-2xl p-6 flex flex-col gap-4 w-full max-w-sm border border-muted transition-all hover:shadow-xl hover:scale-[1.01] duration-200">
+    <div className="bg-card text-card-foreground shadow-md rounded-2xl p-6 flex flex-col gap-4 w-full max-w-sm border border-muted transition-all hover:shadow-xl hover:scale-[1.01] duration-200 break-words">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <span className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground font-medium">
+      <div className="flex items-center justify-between gap-2">
+        <span className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground font-medium truncate max-w-[60%]">
           {note.nm_lengkap}
         </span>
         {isOwner && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 shrink-0">
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -53,17 +53,24 @@ const CardNotes = ({ note, isOwner }) => {
       </div>
 
       {/* Title & Content */}
-      <div>
-        <h3 className="text-xl font-bold text-primary">{note.title}</h3>
-        <p className="mt-2 text-muted-foreground line-clamp-4 text-sm leading-relaxed">
+      <div className="overflow-hidden">
+        <h3 className="text-xl font-bold text-primary break-words truncate">
+          {note.title}
+        </h3>
+        <p className="mt-2 text-muted-foreground line-clamp-4 text-sm leading-relaxed break-words">
           {note.content}
         </p>
       </div>
 
-      {/* Dates */}
-      <div className="text-xs text-muted-foreground mt-auto flex flex-col gap-0.5">
-        <p><span className="font-medium">Created:</span> {new Date(note.created_at).toLocaleString()}</p>
-        <p><span className="font-medium">Updated:</span> {new Date(note.updated_at).toLocaleString()}</p>
+      <div className="text-xs text-muted-foreground mt-auto flex flex-col gap-0.5 break-words">
+        <p>
+          <span className="font-medium">Created:</span>{" "}
+          {new Date(note.created_at).toLocaleString()}
+        </p>
+        <p>
+          <span className="font-medium">Updated:</span>{" "}
+          {new Date(note.updated_at).toLocaleString()}
+        </p>
       </div>
     </div>
   );
