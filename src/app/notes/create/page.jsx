@@ -16,19 +16,21 @@ export default function CreateNotePage() {
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   const router = useRouter();
   const { toast } = useToast();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const savedToken = localStorage.getItem("token");
 
-    if (!token) {
+    if (!savedToken) {
       router.push("/");
     } else {
       try {
-        const decodedToken = jwt.decode(token);
+        const decodedToken = jwt.decode(savedToken);
         setUser(decodedToken.userId);
+        setToken(savedToken);
       } catch (error) {
         console.error("Error decoding token", error);
         router.push("/");
@@ -42,6 +44,15 @@ export default function CreateNotePage() {
         variant: "destructive",
         title: "Gagal menyimpan",
         description: "Judul dan isi tidak boleh kosong.",
+      });
+      return;
+    }
+
+    if (!token || !user) {
+      toast({
+        variant: "destructive",
+        title: "Gagal menyimpan",
+        description: "Token atau data pengguna tidak valid.",
       });
       return;
     }
@@ -101,9 +112,9 @@ export default function CreateNotePage() {
         </div>
 
         <div>
-          <label htmlFor="content" className="block font-medium mb-1">
+          <Label htmlFor="content" className="ml-2 block text-lg font-medium mb-1">
             Isi
-          </label>
+          </Label>
           <Textarea
             id="content"
             value={content}

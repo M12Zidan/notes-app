@@ -1,157 +1,159 @@
-'use client'
+"use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import jwt from "jsonwebtoken";
 
 export default function Home() {
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-      const token = localStorage.getItem("token");
-  
-      if (!token) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      setIsLoggedIn(false);
+    } else {
+      try {
+        const decodedToken = jwt.decode(token);
+        setIsLoggedIn(decodedToken?.userId ? true : false);
+      } catch {
         setIsLoggedIn(false);
-      } else {
-        try {
-          const decodedToken = jwt.decode(token);
-          setIsLoggedIn(decodedToken.userId ? true : false);
-        } catch (error) {
-          setIsLoggedIn(false);
-        }
       }
-    }, []);
+    }
+  }, []);
+
   return (
-    <div className="flex flex-col justify-center items-center p-4">
-      {/* <section className="bg-yellow-400 py-16 px-4 text-center relative overflow-hidden w-full">
-        <div className="max-w-5xl mx-auto z-10 relative">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            We &lt;3 people who code
-          </h1>
-          <p className="text-lg md:text-xl text-gray-800 mb-6 max-w-2xl mx-auto">
-            We build products that empower developers and connect them to
-            solutions that enable productivity, growth, and discovery.
-          </p>
-          <div className="flex justify-center space-x-4">
-            <Link
-              href="/for-developers"
-              className="bg-white text-orange-600 px-6 py-3 rounded-md font-semibold shadow hover:bg-gray-100"
-            >
-              For developers
-            </Link>
-            <Link
-              href="/for-businesses"
-              className="bg-orange-600 text-white px-6 py-3 rounded-md font-semibold shadow hover:bg-orange-700"
-            >
-              For businesses
-            </Link>
-          </div>
-        </div>
-        <div className="absolute inset-0 opacity-10 bg-center bg-no-repeat bg-contain"
-          style={{ backgroundImage: "url('/illustration.png')" }}
-        ></div>
-      </section> */}
-
-      {/* Info Section */}
-      {/* <section className="py-16 px-6 bg-white text-center w-full">
-        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
-          For developers, by developers
-        </h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto mb-12">
-          Stack Overflow is an <span className="text-orange-600">open community</span> for anyone that codes.
-          We help you get answers to your toughest coding questions, share knowledge
-          with your coworkers in private, and find your next dream job.
-        </p>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-  
-          <div className="bg-gray-50 shadow rounded-lg p-6 hover:shadow-md transition">
-            <h3 className="text-xl font-semibold mb-2">Public Q&A</h3>
-            <p className="text-gray-600 mb-4">
-              Get answers to more than 16.5 million questions and give back by
-              sharing your knowledge with others.
-            </p>
-            <Link
-              href="/questions"
-              className="text-white bg-indigo-800 px-4 py-2 rounded hover:bg-indigo-900"
-            >
-              Browse questions
-            </Link>
-          </div>
-
-          <div className="bg-gray-50 shadow rounded-lg p-6 hover:shadow-md transition">
-            <h3 className="text-xl font-semibold mb-2">Private Q&A</h3>
-            <p className="text-gray-600 mb-4">
-              Level up with Stack Overflow while you work. Share knowledge privately
-              with your coworkers using our flagship Q&A engine.
-            </p>
-            <Link
-              href="/private"
-              className="text-white bg-orange-600 px-4 py-2 rounded hover:bg-orange-700"
-            >
-              Learn more
-            </Link>
-          </div>
-
-          <div className="bg-gray-50 shadow rounded-lg p-6 hover:shadow-md transition">
-            <h3 className="text-xl font-semibold mb-2">Browse jobs</h3>
-            <p className="text-gray-600 mb-4">
-              Find the right job through high quality listings and search by
-              technology, stack, location, and more.
-            </p>
-            <Link
-              href="/jobs"
-              className="text-white bg-indigo-800 px-4 py-2 rounded hover:bg-indigo-900"
-            >
-              Find a job
-            </Link>
-          </div>
-        </div>
-      </section> */}
-      <div className="text-center mt-12 md:mt-16 lg:mt-20 p-6">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-500 mb-4">
+    <div className="min-h-screen bg-primary/10 flex flex-col justify-center items-center p-6">
+      {/* Container utama */}
+      <div
+        className="text-center p-8 max-w-4xl bg-white rounded-2xl shadow-md border border-primary opacity-0 translate-y-6 animate-fadeIn"
+        style={{ animationDelay: "0s" }}
+      >
+        <h1
+          className="text-5xl md:text-6xl font-extrabold text-primary mb-6 opacity-0 translate-y-6 animate-fadeIn"
+          style={{ animationDelay: "0.2s" }}
+        >
           Welcome to NotesApp
         </h1>
-        <p className="text-xl text-gray-700 mb-8">
+        <p
+          className="text-lg md:text-xl text-secondary mb-6 max-w-xl mx-auto opacity-0 translate-y-6 animate-fadeIn"
+          style={{ animationDelay: "0.4s" }}
+        >
           A simple and powerful note-taking app for your everyday thoughts.
         </p>
-        <Link
-          href={isLoggedIn ? "/notes/create" : "/login"}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg text-lg hover:bg-blue-500 transition duration-300"
-        >
-          Create a New Note
+        <Link href={isLoggedIn ? "/notes/create" : "/login"}>
+          <p
+            className="relative z-10 inline-block px-8 py-3 mb-4 bg-primary text-white rounded-lg text-lg font-semibold shadow hover:bg-primary/90 transition duration-300 translate-y-6 animate-fadeIn opacity-0"
+            style={{ animationDelay: "0.6s" }}
+          >
+            Create a New Note
+          </p>
         </Link>
       </div>
-      <div className="mt-16">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Features</h2>
+
+      {/* Features */}
+      <div className="mt-20 max-w-7xl w-full px-4">
+        <h2
+          className="text-3xl md:text-4xl font-bold text-primary mb-10 text-center opacity-0 translate-y-6 animate-fadeIn"
+          style={{ animationDelay: "0.8s" }}
+        >
+          Features
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-blue-500 mb-2">
-              Take Notes
-            </h3>
-            <p className="text-gray-600">
-              Create and organize your notes with ease. Add title and content to
-              each note.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-blue-500 mb-2">
-              View Notes
-            </h3>
-            <p className="text-gray-600">
-              Browse all your notes and find them easily whenever you need.
-            </p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold text-blue-500 mb-2">
-              Edit Notes
-            </h3>
-            <p className="text-gray-600">
-              Update and modify your notes whenever needed with just a few
-              clicks.
-            </p>
-          </div>
+          {[
+            {
+              title: "Take Notes",
+              description:
+                "Create and organize your notes with ease. Add title and content to each note.",
+              icon: (
+                <svg
+                  className="w-10 h-10 text-primary mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 20h9M12 4h9M12 12h9M3 6h.01M3 18h.01M3 12h.01"
+                  />
+                </svg>
+              ),
+            },
+            {
+              title: "View Notes",
+              description:
+                "Browse all your notes and find them easily whenever you need.",
+              icon: (
+                <svg
+                  className="w-10 h-10 text-primary mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15 10l4.553-2.276a2 2 0 011.447 3.666l-4.553 2.275a2 2 0 01-1.447-3.665zM3 19v-4a4 4 0 014-4h12"
+                  />
+                </svg>
+              ),
+            },
+            {
+              title: "Edit Notes",
+              description:
+                "Update and modify your notes whenever needed with just a few clicks.",
+              icon: (
+                <svg
+                  className="w-10 h-10 text-primary mb-3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M11 5h6M7 8h10M7 12h10M7 16h10M7 20h10"
+                  />
+                </svg>
+              ),
+            },
+          ].map(({ title, description, icon }, i) => (
+            <div
+              key={title}
+              className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 opacity-0 translate-y-6 animate-fadeIn"
+              style={{ animationDelay: `${1 + i * 0.2}s` }}
+            >
+              {icon}
+              <h3 className="text-xl font-semibold text-primary mb-2">
+                {title}
+              </h3>
+              <p className="text-secondary">{description}</p>
+            </div>
+          ))}
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(15px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation-name: fadeIn;
+          animation-duration: 0.6s;
+          animation-fill-mode: forwards;
+          animation-timing-function: ease-out;
+        }
+      `}</style>
     </div>
   );
 }

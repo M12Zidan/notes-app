@@ -10,12 +10,23 @@ export const dynamic = "force-dynamic";
 
 export async function GET(request) {
   try {
-    const notes = await prisma.notes.findMany();
+    const notes = await prisma.notes.findMany({
+      include: { user: true },
+    });
+
+    const formattedNotes = notes.map((note) => {
+      const { user, ...rest } = note;
+      return {
+        nm_lengkap: user.nm_lengkap,
+        ...rest,
+      };
+    });
+
     return Response.json(
       {
         code: 200,
         message: "Anda Berhasil Mengakses API Notes",
-        data: { notes },
+        data: { notes: formattedNotes },
       },
       { status: 200 }
     );
@@ -81,7 +92,7 @@ export async function PUT(request) {
       where: { id_notes: validate.data.id_notes },
     });
 
-    if(!existingNote ){
+    if (!existingNote) {
       return Response.json(
         { code: 404, message: "Notes not found" },
         { status: 404 }
@@ -134,14 +145,18 @@ export async function DELETE(request) {
       where: { id_notes: validate.data.id_notes },
     });
 
-    if(!existingNote) {
+    if (!existingNote) {
       return Response.json(
         { code: 404, message: "Notes not found" },
         { status: 404 }
       );
     }
 
-    if (existingNote.id_user !== user.userId) {
+    const existingUser = await prisma.user.findUnique({
+      where: { id_user: user.userId },
+    });
+
+    if (existingNote.id_user !== existingUser.id_user) {
       return Response.json(
         { code: 403, message: "Forbidden: Anda tidak memiliki akses" },
         { status: 403 }

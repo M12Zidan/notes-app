@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { SquarePen } from "lucide-react";
@@ -7,52 +9,62 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { DialogEdit } from "./edit-dialog";
 import { DialogDelete } from "@/components/my-components/delete-dialog";
 import Link from "next/link";
 
 const CardNotes = ({ note, isOwner }) => {
   return (
-    <div className="bg-white min-h-[160px] flex flex-col gap-4 justify-between rounded-lg shadow-md p-4 max-w-sm w-full">
+    <div className="bg-card text-card-foreground shadow-md rounded-2xl p-6 flex flex-col gap-4 w-full max-w-sm border border-muted transition-all hover:shadow-xl hover:scale-[1.01] duration-200">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <span className="bg-muted px-3 py-1 rounded-full text-xs text-muted-foreground font-medium">
+          {note.nm_lengkap}
+        </span>
+        {isOwner && (
+          <div className="flex gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={`/notes/${note.id_notes}/edit`}
+                    className="w-9 h-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center hover:brightness-110 transition"
+                  >
+                    <SquarePen size={18} />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p>Edit Note</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger className="w-9 h-9 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center hover:brightness-110 transition">
+                  <DialogDelete note={note} />
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p>Delete Note</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        )}
+      </div>
+
+      {/* Title & Content */}
       <div>
-        <h3 className="text-xl font-semibold text-blue-500">{note.title}</h3>
-        <p className="text-gray-600 mt-2 line-clamp-3">{note.content}</p>
+        <h3 className="text-xl font-bold text-primary">{note.title}</h3>
+        <p className="mt-2 text-muted-foreground line-clamp-4 text-sm leading-relaxed">
+          {note.content}
+        </p>
       </div>
 
-      <div className="text-sm text-gray-400">
-        <p>Created at: {new Date(note.created_at).toLocaleString()}</p>
-        <p>Updated at: {new Date(note.updated_at).toLocaleString()}</p>
+      {/* Dates */}
+      <div className="text-xs text-muted-foreground mt-auto flex flex-col gap-0.5">
+        <p><span className="font-medium">Created:</span> {new Date(note.created_at).toLocaleString()}</p>
+        <p><span className="font-medium">Updated:</span> {new Date(note.updated_at).toLocaleString()}</p>
       </div>
-
-      {isOwner && (
-        <div className="flex gap-1 self-end">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                {/* <DialogEdit note={note}/> */}
-                <Link href={`/notes/${note.id_notes}/edit`}>
-                  <Button className="w-[40px] h-[40px] bg-blue-500 hover:bg-blue-600 rounded-full flex items-center justify-center">
-                    <SquarePen size={24} />
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View & Edit Notes</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <DialogDelete note={note} />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Delete Notes</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      )}
     </div>
   );
 };

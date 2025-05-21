@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,11 +13,14 @@ import {
 import { Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import jwt from "jsonwebtoken";
 
 export function DialogDelete({ note }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+
 
   const handleDelete = async () => {
     setLoading(true);
@@ -26,10 +29,10 @@ export function DialogDelete({ note }) {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({
           id_notes: note.id_notes,
-          id_user: note.id_user,
         }),
       });
 
@@ -54,13 +57,10 @@ export function DialogDelete({ note }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          className="w-[40px] h-[40px] bg-red-500 hover:bg-red-600 rounded-full flex items-center justify-center"
-          variant="destructive"
-        >
-          <Trash2 size={24} />
-        </Button>
+      <DialogTrigger
+         asChild
+      >
+        <Trash2 size={18} />
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-slate-50">
         <DialogHeader>
