@@ -62,6 +62,7 @@ export default function Home() {
           {[
             {
               title: "Take Notes",
+              link: "notes/create",
               description:
                 "Create and organize your notes with ease. Add title and content to each note.",
               icon: (
@@ -81,7 +82,8 @@ export default function Home() {
               ),
             },
             {
-              title: "View Notes",
+              title: "riview",
+              link: "/riview",
               description:
                 "Browse all your notes and find them easily whenever you need.",
               icon: (
@@ -102,6 +104,7 @@ export default function Home() {
             },
             {
               title: "Edit Notes",
+              link: "/",
               description:
                 "Update and modify your notes whenever needed with just a few clicks.",
               icon: (
@@ -120,18 +123,20 @@ export default function Home() {
                 </svg>
               ),
             },
-          ].map(({ title, description, icon }, i) => (
-            <div
-              key={title}
-              className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 opacity-0 translate-y-6 animate-fadeIn"
-              style={{ animationDelay: `${1 + i * 0.2}s` }}
-            >
-              {icon}
-              <h3 className="text-xl font-semibold text-primary mb-2">
-                {title}
-              </h3>
-              <p className="text-secondary">{description}</p>
-            </div>
+          ].map(({ title, description, icon, link }, i) => (
+            <Link href={link}>
+              <div
+                key={title}
+                className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 opacity-0 translate-y-6 animate-fadeIn"
+                style={{ animationDelay: `${1 + i * 0.2}s` }}
+              >
+                {icon}
+                <h3 className="text-xl font-semibold text-primary mb-2">
+                  {title}
+                </h3>
+                <p className="text-secondary">{description}</p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>
