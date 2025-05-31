@@ -98,20 +98,36 @@ export default function Navbar() {
               )}
             </Link>
             {isLoggedIn && (
-              <Link
-                href="/notes/create"
-                className={`relative px-3 py-2 rounded-md font-medium transition-colors
+              <div className="space-x-6">
+                <Link
+                  href="/notes/create"
+                  className={`relative px-3 py-2 rounded-md font-medium transition-colors
                   ${
                     isActive("/notes/create")
                       ? "bg-primary-foreground text-primary"
                       : "text-white hover:bg-primary-foreground/20"
                   }`}
-              >
-                Create Notes
-                {isActive("/notes/create") && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
-                )}
-              </Link>
+                >
+                  Create Notes
+                  {isActive("/notes/create") && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
+                  )}
+                </Link>
+                <Link
+                  href="/tugas-akhir"
+                  className={`relative px-3 py-2 rounded-md font-medium transition-colors
+                  ${
+                    isActive("/tugas-akhir")
+                      ? "bg-primary-foreground text-primary"
+                      : "text-white hover:bg-primary-foreground/20"
+                  }`}
+                >
+                  Tugas Akhir
+                  {isActive("/tugas-akhir") && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
+                  )}
+                </Link>
+              </div>
             )}
             {isLoggedIn ? (
               <Button
@@ -148,7 +164,11 @@ export default function Navbar() {
       {/* Overlay & Drawer untuk mobile - selalu render untuk animasi */}
       <div
         className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ease-in-out
-          ${isOpen ? "visible bg-background/80 dark:bg-background/90 opacity-100" : "invisible opacity-0"}`}
+          ${
+            isOpen
+              ? "visible bg-background/80 dark:bg-background/90 opacity-100"
+              : "invisible opacity-0"
+          }`}
         onClick={closeSidebar}
       >
         <div
@@ -216,21 +236,38 @@ export default function Navbar() {
               )}
             </Link>
             {isLoggedIn && (
-              <Link
-                href="/notes/create"
-                onClick={closeSidebar}
-                className={`relative px-4 py-2 rounded-md font-medium transition-colors
+              <div className="flex flex-col space-y-3">
+                <Link
+                  href="/notes/create"
+                  onClick={closeSidebar}
+                  className={`relative px-4 py-2 rounded-md font-medium transition-colors
                   ${
                     isActive("/notes/create")
                       ? "bg-primary-foreground text-primary"
                       : "text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary"
                   }`}
-              >
-                Create Notes
-                {isActive("/notes/create") && (
-                  <span className="absolute -bottom-1 left-4 right-4 h-1 bg-secondary rounded-t-md" />
-                )}
-              </Link>
+                >
+                  Create Notes
+                  {isActive("/notes/create") && (
+                    <span className="absolute -bottom-1 left-4 right-4 h-1 bg-secondary rounded-t-md" />
+                  )}
+                </Link>
+                <Link
+                  href="/tugas-akhir"
+                  onClick={closeSidebar}
+                  className={`relative px-4 py-2 rounded-md font-medium transition-colors
+                  ${
+                    isActive("/tugas-akhir")
+                      ? "bg-primary-foreground text-primary"
+                      : "text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary"
+                  }`}
+                >
+                  Tuags Akhir
+                  {isActive("/tugas-akhir") && (
+                    <span className="absolute -bottom-1 left-4 right-4 h-1 bg-secondary rounded-t-md" />
+                  )}
+                </Link>
+              </div>
             )}
             {isLoggedIn ? (
               <button

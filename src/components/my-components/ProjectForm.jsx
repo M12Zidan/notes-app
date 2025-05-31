@@ -68,9 +68,8 @@ const ProjectForm = () => {
 
     setLoading(true);
 
-    // ${process.env.NEXT_PUBLIC_API_URL}/v2/tugas-akhir
     try {
-      const res = await fetch(`http://localhost:3000/api/v2/tugas-akhir`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v2/tugas-akhir`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -212,13 +211,13 @@ const ProjectForm = () => {
             />
           </div>
 
-          <button
+          <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition"
+            className="w-full text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-all"
           >
             <Send className="w-5 h-5" />
             Kirim Data Project
-          </button>
+          </Button>
         </form>
       </div>
     </div>

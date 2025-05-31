@@ -2,25 +2,68 @@ import prisma from "@/lib/prisma";
 import { verifyToken } from "@/lib/(back-end)/auth";
 export const dynamic = "force-dynamic";
 
-
-
 import {
   createProjectSchema,
   updateProjectSchema,
   deleteProjectSchema,
 } from "@/lib/validation/resultProject";
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const projects = await prisma.resultProject.findMany({
-      include: { reviewProject: true },
+    let userId = null;
+
+    const authHeader = request.headers.get("authorization");
+    if (authHeader?.startsWith("Bearer ")) {
+      try {
+        const user = verifyToken(authHeader);
+        userId = user.userId;
+      } catch {
+        // Token invalid → anggap sebagai user publik
+      }
+    }
+
+    // Query resultProject tanpa include reviewProject detail
+    const projects = await prisma.resultProject.findMany();
+
+    if (!userId) {
+      // User publik, langsung return semua projects tanpa review info
+      const projectsPublic = projects.map((p) => ({
+        ...p,
+        userReview: null,
+      }));
+
+      return Response.json(
+        {
+          code: 200,
+          message: "Berhasil mendapatkan data project",
+          data: { projects: projectsPublic },
+        },
+        { status: 200 }
+      );
+    }
+
+    // Jika user login, ambil review user untuk semua project sekaligus
+    const userReviews = await prisma.reviewProject.findMany({
+      where: { reviewer_id: userId },
+      select: { id_project: true, score: true },
     });
+
+    // Buat map id_project -> score agar mudah lookup
+    const reviewMap = new Map(userReviews.map((r) => [r.id_project, r.score]));
+
+    // Gabungkan data project dengan info review user
+    const projectsWithReviewFlag = projects.map((project) => ({
+      ...project,
+      userReview: reviewMap.has(project.id_project)
+        ? { reviewed: true, score: reviewMap.get(project.id_project) }
+        : { reviewed: false },
+    }));
 
     return Response.json(
       {
         code: 200,
         message: "Berhasil mendapatkan data project",
-        data: { projects },
+        data: { projects: projectsWithReviewFlag },
       },
       { status: 200 }
     );
@@ -31,6 +74,7 @@ export async function GET() {
     );
   }
 }
+
 
 export async function POST(request) {
   try {

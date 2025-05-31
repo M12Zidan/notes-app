@@ -58,7 +58,7 @@ const NotesPage = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
           {notes.map((note) => (
-              <CardNotes note={note} isOwner={note.id_user === userId} />
+              <CardNotes key={note.id_notes} note={note} isOwner={note.id_user === userId} />
           ))}
         </div>
       )}
