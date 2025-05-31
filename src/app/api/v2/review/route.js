@@ -20,7 +20,11 @@ export async function POST(request) {
 
     if (!parsed.success) {
       return Response.json(
-        { code: 400, message: "Validasi gagal", errors: parsed.error.flatten() },
+        {
+          code: 400,
+          message: "Validasi gagal",
+          errors: parsed.error.flatten(),
+        },
         { status: 400 }
       );
     }
@@ -78,7 +82,9 @@ export async function POST(request) {
 
     const total = reviews.length;
     const sum = reviews.reduce((acc, cur) => acc + cur.score, 0);
-    const average = sum / total;
+
+    // Bulatkan rata-rata ke 2 digit di belakang koma
+    const average = Math.round((sum / total) * 100) / 100;
 
     await prisma.resultProject.update({
       where: { id_project },
