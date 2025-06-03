@@ -79,7 +79,7 @@ const AllProjectsPage = () => {
       });
 
       if (!res.ok) throw new Error("Gagal mengirim penilaian");
-      Swal.fire("Makasih Bang", "This projek telah di rating", "success")
+      Swal.fire("And BOOOOM!!!", "This projek telah di rating", "success")
       // Refresh project data after rating
       fetchDataWithToken(token);
       setSelectedProjectId(null);
