@@ -95,7 +95,7 @@ const AllProjectsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-[#1e293b] py-12 px-6 md:px-20">
+    <div className="min-h-screen max-w-screen-xl mx-auto py-12 px-6 md:px-20">
       <h1 className="text-3xl md:text-4xl font-bold mb-12 text-center uppercase text-primary">
         Semua Proyek Peserta
       </h1>
