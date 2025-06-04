@@ -97,6 +97,20 @@ export default function Navbar() {
                 <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
               )}
             </Link>
+            <Link
+              href="/review"
+              className={`relative px-3 py-2 rounded-md font-medium transition-colors
+                  ${
+                    isActive("/review")
+                      ? "bg-primary-foreground text-primary"
+                      : "text-white hover:bg-primary-foreground/20"
+                  }`}
+            >
+              Review Project
+              {isActive("/review") && (
+                <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
+              )}
+            </Link>
             {isLoggedIn && (
               <div className="space-x-6">
                 <Link
@@ -110,20 +124,6 @@ export default function Navbar() {
                 >
                   Create Notes
                   {isActive("/notes/create") && (
-                    <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
-                  )}
-                </Link>
-                <Link
-                  href="/review"
-                  className={`relative px-3 py-2 rounded-md font-medium transition-colors
-                  ${
-                    isActive("/review")
-                      ? "bg-primary-foreground text-primary"
-                      : "text-white hover:bg-primary-foreground/20"
-                  }`}
-                >
-                  Review Project
-                  {isActive("/review") && (
                     <span className="absolute -bottom-1 left-0 right-0 h-1 bg-secondary rounded-t-md" />
                   )}
                 </Link>

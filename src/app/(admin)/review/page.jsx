@@ -55,7 +55,6 @@ const AllProjectsPage = () => {
   // On mount or router change, get token and fetch data
   useEffect(() => {
     const savedToken = localStorage.getItem("token") || "";
-    if(!savedToken) router.push("/login");
     setToken(savedToken);
     fetchDataWithToken(savedToken);
   }, [router]);
