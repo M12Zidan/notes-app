@@ -25,7 +25,7 @@ export default function EditNotePage({ params }) {
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (!storedToken) {
-      router.push("/");
+      router.push("/login");
       return;
     }
     setToken(storedToken);

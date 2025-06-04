@@ -25,7 +25,7 @@ export default function CreateNotePage() {
     const savedToken = localStorage.getItem("token");
 
     if (!savedToken) {
-      router.push("/");
+      router.push("/login");
     } else {
       try {
         const decodedToken = jwt.decode(savedToken);

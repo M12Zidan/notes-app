@@ -82,8 +82,8 @@ export default function Home() {
               ),
             },
             {
-              title: "riview",
-              link: "/riview",
+              title: "review",
+              link: "/review",
               description:
                 "Browse all your notes and find them easily whenever you need.",
               icon: (
@@ -104,7 +104,7 @@ export default function Home() {
             },
             {
               title: "Edit Notes",
-              link: "/",
+              link: "/login",
               description:
                 "Update and modify your notes whenever needed with just a few clicks.",
               icon: (
