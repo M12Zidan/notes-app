@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import Swal from "sweetalert2";
 
 const AllProjectsPage = () => {
   const [projects, setProjects] = useState([]);
@@ -47,7 +48,7 @@ const AllProjectsPage = () => {
       const json = await response.json();
       setProjects(json.data.projects);
     } catch (error) {
-      alert("Terjadi kesalahan: " + error.message);
+      Swal.fire("Gagal", error.message, "error")
     }
   };
 
@@ -79,13 +80,13 @@ const AllProjectsPage = () => {
       });
 
       if (!res.ok) throw new Error("Gagal mengirim penilaian");
-      alert("Terima kasih sudah menilai");
+      Swal.fire("And BOOOOM!!!", "This projek telah di rating", "success")
       // Refresh project data after rating
       fetchDataWithToken(token);
       setSelectedProjectId(null);
       setRating(0);
     } catch (error) {
-      alert("Terjadi kesalahan: " + error.message);
+      Swal.fire("Gagal", error.message, "error")
     }
   };
 
