@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export const createNoteSchema = z.object({
-  id_user: z.string({
-    required_error: "Id User is required",
-    invalid_type_error: "Id User must be a string"
-  }).min(1, "Id User cannot be empty"),
-  
+export const createNoteSchema = z.object({  
   title: z.string({
     required_error: "Title is required",
     invalid_type_error: "Title must be a string"
