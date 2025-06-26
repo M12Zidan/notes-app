@@ -1,4 +1,5 @@
 "use client";
+
 import ApiDocCard from "@/components/my-components/ApiDocCard";
 
 export default function DocumentationPage() {
@@ -39,6 +40,10 @@ export default function DocumentationPage() {
       response: {
         code: 200,
         message: "Login success",
+        data: {
+          uuid: "string",
+          fullName: "string",
+        },
         token: "string",
       },
     },
@@ -60,6 +65,27 @@ export default function DocumentationPage() {
               nm_lengkap: "string",
             },
           ],
+        },
+      },
+    },
+    {
+      title: "Get Note by ID",
+      method: "GET",
+      endpoint: "/api/notes/{id_notes}",
+      description: "Mengambil satu note berdasarkan ID-nya.",
+      request: {
+        id_notes: { type: "string", label: "ID Note (URL Param)" },
+      },
+      response: {
+        code: 200,
+        message: "Berhasil mendapatkan Notes",
+        data: {
+          id_notes: "string",
+          title: "string",
+          content: "string",
+          id_user: "string",
+          created_at: "datetime",
+          updated_at: "datetime",
         },
       },
     },
@@ -87,7 +113,8 @@ export default function DocumentationPage() {
       title: "Update Note",
       method: "PUT",
       endpoint: "/api/notes",
-      description: "Memperbarui note yang dimiliki user (token required).",
+      description:
+        "Memperbarui note yang dimiliki user (memerlukan token Authorization).",
       request: {
         id_notes: { type: "string", label: "ID Note" },
         title: { type: "string", label: "Judul Baru" },
@@ -108,7 +135,8 @@ export default function DocumentationPage() {
       title: "Delete Note",
       method: "DELETE",
       endpoint: "/api/notes",
-      description: "Menghapus note yang dimiliki user (token required).",
+      description:
+        "Menghapus note yang dimiliki user (memerlukan token Authorization).",
       request: {
         id_notes: { type: "string", label: "ID Note" },
       },

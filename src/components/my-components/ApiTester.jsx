@@ -4,7 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-export default function ApiTester({ endpoint, method, sample, schema, requireAuth = false }) {
+export default function ApiTester({
+  endpoint,
+  method,
+  sample,
+  schema,
+  requireAuth = false,
+}) {
   const [form, setForm] = useState(() => ({ ...sample }));
   const [token, setToken] = useState("");
   const [result, setResult] = useState(null);
@@ -24,6 +30,19 @@ export default function ApiTester({ endpoint, method, sample, schema, requireAut
 
       if (requireAuth && token.trim()) {
         headers["Authorization"] = `Bearer ${token.trim()}`;
+      }
+
+      const pathParamMatch = url.match(/\{(\w+)\}/);
+      if (pathParamMatch) {
+        const paramKey = pathParamMatch[1];
+        const paramValue = form[paramKey];
+        if (!paramValue) {
+          throw new Error(`Parameter URL "${paramKey}" belum diisi`);
+        }
+
+        url = url.replace(`{${paramKey}}`, paramValue);
+
+        delete form[paramKey];
       }
 
       const options = {
@@ -51,7 +70,8 @@ export default function ApiTester({ endpoint, method, sample, schema, requireAut
   const getInputType = (key) => {
     const type = schema[key]?.type || "string";
     if (type === "email" || key.toLowerCase().includes("email")) return "email";
-    if (type === "password" || key.toLowerCase().includes("password")) return "password";
+    if (type === "password" || key.toLowerCase().includes("password"))
+      return "password";
     return "text";
   };
 

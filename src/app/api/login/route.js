@@ -38,6 +38,11 @@ export async function POST(req) {
     return NextResponse.json({
       code: 200,
       message: "Login success",
+      data: {
+        uuid: user.id_user,
+        fullName: user.nm_lengkap,
+  
+      },
       token: token,
     });
   } catch (error) {
