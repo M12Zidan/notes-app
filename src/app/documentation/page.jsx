@@ -59,10 +59,22 @@ export default function DocumentationPage() {
         data: {
           notes: [
             {
+              nm_lengkap: "string",
               id_notes: "string",
+              id_user: "string",
               title: "string",
               content: "string",
+              created_at: "string",
+              updated_at: "string",
+            },
+            {
               nm_lengkap: "string",
+              id_notes: "string",
+              id_user: "string",
+              title: "string",
+              content: "string",
+              created_at: "string",
+              updated_at: "string",
             },
           ],
         },
