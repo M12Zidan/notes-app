@@ -12,6 +12,9 @@ export async function GET(request) {
   try {
     const notes = await prisma.notes.findMany({
       include: { user: true },
+      orderBy: {
+        updated_at: 'desc', // Atau created_at, tergantung mana yang kamu prioritaskan
+      },
     });
 
     const formattedNotes = notes.map((note) => {
